@@ -15,8 +15,9 @@ class Report extends BaseAppController
 
             if (! $this->validate($rules)) {
                 return $this->render('report/index', [
-                    'title'      => 'Transaction Report',
-                    'validation' => $this->validator,
+                    'title'          => 'Transaction Report',
+                    'report_scripts' => true,
+                    'validation'     => $this->validator,
                 ]);
             }
 
@@ -39,7 +40,7 @@ class Report extends BaseAppController
             return $this->_printTransactions($query, $transaction, $date);
         }
 
-        return $this->render('report/index', ['title' => 'Transaction Report']);
+        return $this->render('report/index', ['title' => 'Transaction Report', 'report_scripts' => true]);
     }
 
     private function _printTransactions(array $data, string $type, string $date): \CodeIgniter\HTTP\Response

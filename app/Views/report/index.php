@@ -1,4 +1,3 @@
-<?php $report_scripts = true; ?>
 <div class="row justify-content-center"><div class="col-md-6">
     <div class="card shadow-sm">
         <div class="card-header bg-white py-3"><h4 class="h5 m-0 font-weight-bold text-primary"><i class="fas fa-print mr-2"></i>Transaction Report</h4></div>
