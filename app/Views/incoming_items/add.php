@@ -84,14 +84,18 @@
                     </div>
                 </div>
 
-                <!-- Lot & Expiry -->
+                <!-- Lot Number -->
                 <div class="row form-group">
                     <label class="col-md-3 text-md-right col-form-label" for="lot_number">Lot Number <span class="text-danger">*</span></label>
-                    <div class="col-md-3">
+                    <div class="col-md-5">
                         <input value="<?= old('lot_number') ?>" name="lot_number" id="lot_number" type="text" class="form-control" placeholder="e.g. LOT240001">
                     </div>
-                    <label class="col-md-2 text-md-right col-form-label" for="expiry_date">Expiry Date <span class="text-danger">*</span></label>
-                    <div class="col-md-4">
+                </div>
+
+                <!-- Expiry Date -->
+                <div class="row form-group">
+                    <label class="col-md-3 text-md-right col-form-label" for="expiry_date">Expiry Date <span class="text-danger">*</span></label>
+                    <div class="col-md-5">
                         <input value="<?= old('expiry_date') ?>" name="expiry_date" id="expiry_date" type="text" class="form-control date" placeholder="YYYY-MM-DD">
                     </div>
                 </div>
@@ -105,8 +109,12 @@
                             <div class="input-group-append"><span class="input-group-text" id="unit_display">Unit</span></div>
                         </div>
                     </div>
-                    <label class="col-md-2 text-md-right col-form-label" for="amount_in">Qty Received <span class="text-danger">*</span></label>
-                    <div class="col-md-4">
+                </div>
+
+                <!-- Qty Received -->
+                <div class="row form-group">
+                    <label class="col-md-3 text-md-right col-form-label" for="amount_in">Qty Received <span class="text-danger">*</span></label>
+                    <div class="col-md-5">
                         <div class="input-group">
                             <input value="<?= old('amount_in') ?>" name="amount_in" id="amount_in" type="number" min="1" step="1" class="form-control" placeholder="Enter quantity">
                             <div class="input-group-append"><span class="input-group-text" id="unit_label">Unit</span></div>
