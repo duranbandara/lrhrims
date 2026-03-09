@@ -1,4 +1,3 @@
-<?php $dashboard_scripts = true; ?>
 <!-- KPI Cards -->
 <div class="row mb-2">
     <div class="col-xl-3 col-6 mb-4">

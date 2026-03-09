@@ -6,7 +6,8 @@ class Dashboard extends BaseAppController
 {
     public function index(): string
     {
-        $data['title'] = 'Dashboard';
+        $data['title']             = 'Dashboard';
+        $data['dashboard_scripts'] = true;
 
         $data['items']    = $this->model->countAll('items');
         $data['in_items'] = $this->model->countAll('item_in');
