@@ -146,21 +146,57 @@ var html5QrCode=null, scannerOpen=false, lookupTimer=null;
 var GS='\x1d';
 var SCAN_URL='<?= base_url('outgoingitems/scan') ?>';
 
+// ── GS1-128 parser (same logic as receive form) ──────────────────────────────
+function parseGS1(raw){
+    var FIXED={'00':18,'01':14,'02':14,'11':6,'12':6,'13':6,'15':6,'16':6,'17':6,'18':6,'19':6,'20':2,'41':13};
+    var result={gtin:null,lot:null,expiry:null},i=0;
+    while(i<raw.length){
+        if(result.gtin&&result.lot&&result.expiry)break;
+        if(raw[i]===GS){i++;continue;}
+        var ai2=raw.substr(i,2);
+        if(ai2==='01'){if(!result.gtin)result.gtin=raw.substr(i+2,14);i+=16;}
+        else if(ai2==='17'){
+            if(!result.expiry){var v=raw.substr(i+2,6),yy=parseInt(v.substr(0,2),10),mm=v.substr(2,2),dd=v.substr(4,2);if(dd==='00')dd='01';result.expiry=(yy<30?2000+yy:1900+yy)+'-'+mm+'-'+dd;}
+            i+=8;
+        }else if(ai2==='10'){
+            i+=2;
+            if(!result.lot){var start=i,gsPos=raw.indexOf(GS,i);
+                if(gsPos!==-1){result.lot=raw.substr(start,gsPos-start);i=gsPos;}
+                else{var end=raw.length;for(var j=i;j<raw.length-1;j++){var c=raw.substr(j,2);if(/^\d{2}$/.test(c)&&FIXED[c]!==undefined){end=j;break;}}result.lot=raw.substr(start,end-start);i=end;}
+            }else{var gp=raw.indexOf(GS,i);i=gp!==-1?gp:raw.length;}
+        }else if(FIXED[ai2]!==undefined){i+=2+FIXED[ai2];}else{i++;}
+    }
+    return result;
+}
+function isGS1(v){return v.indexOf(GS)!==-1||(/^01\d{14}/.test(v)&&v.length>20);}
+
+function processInput(v){
+    if(isGS1(v)){
+        showScanResult('info','<i class="fas fa-spinner fa-spin"></i> Parsing GS1…');
+        var p=parseGS1(v);
+        if(!p.gtin){showScanResult('danger','Could not read GTIN from barcode.');return;}
+        doLookup(p.gtin);
+    } else {
+        doLookup(v);
+    }
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 document.getElementById('btn_open_camera').addEventListener('click',function(){
     if(scannerOpen){stopCamera();return;}
     document.getElementById('qr-reader').style.display='block';
     this.innerHTML='<i class="fas fa-times"></i>';
     html5QrCode=new Html5Qrcode("qr-reader");
     html5QrCode.start({facingMode:"environment"},{fps:10,qrbox:{width:220,height:220}},
-        function(t){stopCamera();document.getElementById('item_code_input').value=t;doLookup(t);},function(){}
+        function(t){stopCamera();document.getElementById('item_code_input').value=t;processInput(t);},function(){}
     ).catch(function(e){showScanResult('danger','Camera: '+e);stopCamera();});
     scannerOpen=true;
 });
 function stopCamera(){if(html5QrCode&&scannerOpen)html5QrCode.stop().catch(function(){});document.getElementById('qr-reader').style.display='none';document.getElementById('btn_open_camera').innerHTML='<i class="fas fa-qrcode"></i>';scannerOpen=false;}
 
 var inp=document.getElementById('item_code_input');
-inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();clearTimeout(lookupTimer);var v=this.value.trim();if(v)doLookup(v);}});
-inp.addEventListener('input',function(){clearTimeout(lookupTimer);var v=this.value.trim();if(!v)return;lookupTimer=setTimeout(function(){doLookup(v);},600);});
+inp.addEventListener('keydown',function(e){if(e.key==='Enter'){e.preventDefault();clearTimeout(lookupTimer);var v=this.value.trim();if(v)processInput(v);}});
+inp.addEventListener('input',function(){clearTimeout(lookupTimer);var v=this.value.trim();if(!v)return;var d=(isGS1(v)||v.indexOf('|')!==-1)?150:600;lookupTimer=setTimeout(function(){processInput(v);},d);});
 
 document.getElementById('item_select').addEventListener('change',function(){
     if(!this.value)return;
