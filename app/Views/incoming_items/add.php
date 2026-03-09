@@ -84,6 +84,17 @@
                     </div>
                 </div>
 
+                <!-- Current Stock -->
+                <div class="row form-group">
+                    <label class="col-md-3 text-md-right col-form-label">Current Stock</label>
+                    <div class="col-md-3">
+                        <div class="input-group">
+                            <input type="number" id="current_stock" class="form-control bg-light" readonly placeholder="—">
+                            <div class="input-group-append"><span class="input-group-text" id="unit_display">Unit</span></div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Lot Number -->
                 <div class="row form-group">
                     <label class="col-md-3 text-md-right col-form-label" for="lot_number">Lot Number <span class="text-danger">*</span></label>
@@ -97,17 +108,6 @@
                     <label class="col-md-3 text-md-right col-form-label" for="expiry_date">Expiry Date <span class="text-danger">*</span></label>
                     <div class="col-md-5">
                         <input value="<?= old('expiry_date') ?>" name="expiry_date" id="expiry_date" type="text" class="form-control date" placeholder="YYYY-MM-DD">
-                    </div>
-                </div>
-
-                <!-- Stock & Qty -->
-                <div class="row form-group">
-                    <label class="col-md-3 text-md-right col-form-label">Current Stock</label>
-                    <div class="col-md-3">
-                        <div class="input-group">
-                            <input type="number" id="current_stock" class="form-control bg-light" readonly placeholder="—">
-                            <div class="input-group-append"><span class="input-group-text" id="unit_display">Unit</span></div>
-                        </div>
                     </div>
                 </div>
 
