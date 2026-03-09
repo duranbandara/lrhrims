@@ -223,6 +223,12 @@ document.getElementById('btn_reset').addEventListener('click',function(){
     document.getElementById('unit_display').textContent='Unit';
     document.getElementById('unit_label').textContent='Unit';
     document.getElementById('scan_result').innerHTML='';
+    $('#date_in').datepicker('value', TODAY_DATE);
+});
+
+var TODAY_DATE = '<?= old('date_in', date('Y-m-d')) ?>';
+$(function() {
+    $('#date_in').datepicker({ uiLibrary: 'bootstrap4', format: 'yyyy-mm-dd', value: TODAY_DATE });
 });
 
 function processInput(v){ if(isGS1(v))processGS1(v); else if(v.indexOf('|')!==-1)doPost(v); else doPost(v); }
