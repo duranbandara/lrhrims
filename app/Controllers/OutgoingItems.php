@@ -75,12 +75,15 @@ class OutgoingItems extends BaseAppController
         $codeIncr   = (int)substr((string)$lastCode, -4) + 1;
         $number     = str_pad((string)$codeIncr, 4, '0', STR_PAD_LEFT);
 
+        $defaultSection = $this->model->getRow('lab_sections', ['d_status' => 1]);
+
         return [
-            'sections'      => $this->model->getLabSections(),
-            'items'         => $this->model->getGoods(),
-            'id_item_out'   => $code . $number,
-            'selected_item' => $postedItemId ? $this->model->getRow('items', ['id_item' => $postedItemId]) : null,
-            'selected_lots' => $postedItemId ? $this->model->getLotsByReagent($postedItemId) : [],
+            'sections'           => $this->model->getLabSections(),
+            'default_section_id' => $defaultSection ? $defaultSection['id_section'] : null,
+            'items'              => $this->model->getGoods(),
+            'id_item_out'        => $code . $number,
+            'selected_item'      => $postedItemId ? $this->model->getRow('items', ['id_item' => $postedItemId]) : null,
+            'selected_lots'      => $postedItemId ? $this->model->getLotsByReagent($postedItemId) : [],
         ];
     }
 

@@ -108,7 +108,7 @@
                         <select name="section_id" id="section_id" class="custom-select">
                             <option value="">— Select lab section —</option>
                             <?php foreach ($sections as $sec): ?>
-                            <option value="<?= $sec['id_section'] ?>" <?= old('section_id') == $sec['id_section'] ? 'selected' : '' ?>>
+                            <option value="<?= $sec['id_section'] ?>" <?= old('section_id', $default_section_id) == $sec['id_section'] ? 'selected' : '' ?>>
                                 <?= esc($sec['section_name']) ?>
                             </option>
                             <?php endforeach; ?>
