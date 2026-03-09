@@ -16,7 +16,7 @@ class Unit extends BaseAppController
 
     public function add()
     {
-        if ($thisstrtolower(->request->getMethod()) === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('unit/add', ['title' => 'Add Unit', 'validation' => $this->validator]);
             }
@@ -31,7 +31,7 @@ class Unit extends BaseAppController
 
     public function edit(int $id)
     {
-        if ($thisstrtolower(->request->getMethod()) === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('unit/edit', [
                     'title'      => 'Edit Unit',

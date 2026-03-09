@@ -6,7 +6,7 @@ class Report extends BaseAppController
 {
     public function index()
     {
-        if ($thisstrtolower(->request->getMethod()) === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
             $transaction = $this->request->getPost('transaction');
             $rules       = ['transaction' => 'required|in_list[item_in,item_out,current_stock]'];
             if ($transaction !== 'current_stock') {

@@ -14,7 +14,7 @@ class IncomingItems extends BaseAppController
 
     public function add()
     {
-        if ($thisstrtolower(->request->getMethod()) === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
             $rules = [
                 'date_in'    => 'required|trim',
                 'item_id'    => 'required',

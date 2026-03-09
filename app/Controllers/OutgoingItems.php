@@ -14,7 +14,7 @@ class OutgoingItems extends BaseAppController
 
     public function add()
     {
-        if ($thisstrtolower(->request->getMethod()) === 'post') {
+        if (strtolower($this->request->getMethod()) === 'post') {
             $itemId    = $this->request->getPost('item_id');
             $lotNumber = $this->request->getPost('lot_number');
 
