@@ -246,7 +246,7 @@ function fillLots(lots){
         opt.textContent=l.lot_number+' (Exp: '+l.expiry_date+') — qty: '+l.quantity+' ['+badge+']';
         sel.appendChild(opt);
     });
-    if(lots.length===1){sel.selectedIndex=1;sel.dispatchEvent(new Event('change'));}
+    sel.selectedIndex=1;sel.dispatchEvent(new Event('change'));
 }
 
 function showScanResult(t,m){document.getElementById('scan_result').innerHTML='<div class="alert alert-'+t+' py-1 px-2 mb-0 small">'+m+'</div>';}
