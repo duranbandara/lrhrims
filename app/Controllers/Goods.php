@@ -21,7 +21,7 @@ class Goods extends BaseAppController
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('goods/add', $this->_formData() + [
                     'title'      => 'Add Reagent',
@@ -48,7 +48,7 @@ class Goods extends BaseAppController
 
     public function edit(string $id)
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('goods/edit', $this->_formData() + [
                     'title'      => 'Edit Reagent',

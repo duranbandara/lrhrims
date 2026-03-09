@@ -16,7 +16,7 @@ class Category extends BaseAppController
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('category/add', ['title' => 'Add Category', 'validation' => $this->validator]);
             }
@@ -31,7 +31,7 @@ class Category extends BaseAppController
 
     public function edit(int $id)
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('category/edit', [
                     'title'      => 'Edit Category',

@@ -15,7 +15,7 @@ class User extends BaseAppController
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             $rules = [
                 'username'  => 'required|trim|alpha_numeric|is_unique[user.username]',
                 'password'  => 'required|min_length[3]|trim',
@@ -53,7 +53,7 @@ class User extends BaseAppController
     {
         $userRecord = $this->model->getRow('user', ['id_user' => $id]);
 
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             $username     = $this->request->getPost('username');
             $email        = $this->request->getPost('email');
             $uniqUsername = ($userRecord['username'] === $username) ? '' : '|is_unique[user.username]';

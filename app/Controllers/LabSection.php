@@ -18,7 +18,7 @@ class LabSection extends BaseAppController
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('labsection/add', [
                     'title'      => 'Add Lab Section',
@@ -36,7 +36,7 @@ class LabSection extends BaseAppController
 
     public function edit(int $id)
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('labsection/edit', [
                     'title'      => 'Edit Lab Section',

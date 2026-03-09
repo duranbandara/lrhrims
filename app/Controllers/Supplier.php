@@ -20,7 +20,7 @@ class Supplier extends BaseAppController
 
     public function add()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('supplier/add', [
                     'title'      => 'Add Supplier',
@@ -38,7 +38,7 @@ class Supplier extends BaseAppController
 
     public function edit(int $id)
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             if (! $this->validate($this->rules)) {
                 return $this->render('supplier/edit', [
                     'title'      => 'Edit Supplier',

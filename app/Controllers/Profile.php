@@ -18,7 +18,7 @@ class Profile extends BaseAppController
         $userId = session()->get('user_id');
         $user   = $this->model->getRow('user', ['id_user' => $userId]);
 
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             $username     = $this->request->getPost('username');
             $email        = $this->request->getPost('email');
             $uniqUsername = ($user['username'] === $username) ? '' : '|is_unique[user.username]';
@@ -79,7 +79,7 @@ class Profile extends BaseAppController
 
     public function changePassword()
     {
-        if ($this->request->getMethod() === 'post') {
+        if ($thisstrtolower(->request->getMethod()) === 'post') {
             $rules = [
                 'old_password'     => 'required|trim',
                 'new_password'     => 'required|trim|min_length[3]|differs[old_password]',
