@@ -120,7 +120,7 @@
                 <div class="row form-group">
                     <label class="col-md-3 text-md-right" for="date_in">Date Received <span class="text-danger">*</span></label>
                     <div class="col-md-4">
-                        <input value="<?= old('date_in', date('Y-m-d')) ?>" name="date_in" id="date_in" type="text" class="form-control date" placeholder="YYYY-MM-DD">
+                        <input value="<?= old('date_in', date('Y-m-d')) ?>" name="date_in" id="date_in" type="date" class="form-control">
                     </div>
                 </div>
 
@@ -223,13 +223,11 @@ document.getElementById('btn_reset').addEventListener('click',function(){
     document.getElementById('unit_display').textContent='Unit';
     document.getElementById('unit_label').textContent='Unit';
     document.getElementById('scan_result').innerHTML='';
-    $('#date_in').datepicker('value', TODAY_DATE);
+    document.getElementById('date_in').value = TODAY_DATE;
 });
 
-var TODAY_DATE = '<?= old('date_in', date('Y-m-d')) ?>';
-$(function() {
-    $('#date_in').datepicker({ uiLibrary: 'bootstrap4', format: 'yyyy-mm-dd', value: TODAY_DATE });
-});
+var TODAY_DATE = '<?= date('Y-m-d') ?>';
+document.getElementById('date_in').value = document.getElementById('date_in').value || TODAY_DATE;
 
 function processInput(v){ if(isGS1(v))processGS1(v); else if(v.indexOf('|')!==-1)doPost(v); else doPost(v); }
 
