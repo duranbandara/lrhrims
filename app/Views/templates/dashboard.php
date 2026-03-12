@@ -241,7 +241,7 @@ if (ctx) {
                 pointRadius: 3, pointBackgroundColor: 'rgba(78,115,223,1)',
                 pointBorderColor: 'rgba(78,115,223,1)', pointHoverRadius: 3,
                 pointHitRadius: 10, pointBorderWidth: 2,
-                data: <?= json_encode($cii ?? []) ?>
+                data: <?= json_encode(array_map('intval', $cii ?? [])) ?>
             },{
                 label: 'Issued',
                 lineTension: 0.3,
@@ -250,7 +250,7 @@ if (ctx) {
                 pointRadius: 3, pointBackgroundColor: '#e74a3b',
                 pointBorderColor: '#e74a3b', pointHoverRadius: 3,
                 pointHitRadius: 10, pointBorderWidth: 2,
-                data: <?= json_encode($coi ?? []) ?>
+                data: <?= json_encode(array_map('intval', $coi ?? [])) ?>
             }]
         },
         options: {
