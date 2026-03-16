@@ -187,7 +187,7 @@
 <script src="<?= base_url('assets/vendor/jquery-easing/jquery.easing.min.js') ?>"></script>
 <script src="<?= base_url('assets/js/sb-admin-2.min.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/daterangepicker/moment.min.js') ?>"></script>
-<script src="<?= base_url('assets/vendor/daterangepicker/daterangepicker.min.js') ?>"></script>
+<script src="<?= base_url('assets/vendor/daterangepicker/daterangepicker.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/datatables/jquery.dataTables.min.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/datatables/dataTables.bootstrap4.min.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/datatables/buttons/js/dataTables.buttons.min.js') ?>"></script>
@@ -200,7 +200,7 @@
 <script src="<?= base_url('assets/vendor/datatables/buttons/js/buttons.colVis.min.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/datatables/responsive/js/dataTables.responsive.min.js') ?>"></script>
 <script src="<?= base_url('assets/vendor/datatables/responsive/js/responsive.bootstrap4.min.js') ?>"></script>
-<script src="<?= base_url('assets/vendor/gijgo/js/gijgo.min.js') ?>"></script>
+<script src="<?= base_url('assets/vendor/gijgo/js/gijgo.js') ?>"></script>
 
 <script>
 $(function() {
