@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title><?= esc($title) ?> | Lab Reagent System</title>
+    <link rel="shortcut icon" href="<?= base_url('favicon.ico') ?>" type="image/x-icon">
     <link href="<?= base_url('assets/vendor/fontawesome-free/css/all.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/fonts.min.css') ?>" rel="stylesheet">
     <link href="<?= base_url('assets/css/sb-admin-2.min.css') ?>" rel="stylesheet">
