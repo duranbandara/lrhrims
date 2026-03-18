@@ -7,7 +7,7 @@
                     <div class="col-lg-6">
                         <div class="p-5">
                             <div class="text-center mb-4">
-                                <h1 class="h4 text-gray-900">LRHRIMS</h1>
+                                <img src="<?= base_url('assets/img/lrhCMB-logo-blk3.png') ?>" alt="LRH Logo" style="height:100px;" class="mb-2">
                                 <span class="text-muted">Lab Reagent Inventory System</span>
                             </div>
                             <?php if (session()->getFlashdata('message')): ?>
