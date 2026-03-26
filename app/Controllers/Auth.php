@@ -80,6 +80,15 @@ class Auth extends Controller
             ]);
 
             log_message('debug', 'AUTH: Redirecting to dashboard, session logged_in=' . session()->get('logged_in'));
+            $this->model->insertRow('activity_logs', [
+                'user_id'     => $user['id_user'],
+                'user_name'   => $user['des'],
+                'role'        => $user['role'],
+                'action'      => 'login',
+                'module'      => 'Auth',
+                'description' => 'User logged in: ' . $user['username'],
+                'created_at'  => date('Y-m-d H:i:s'),
+            ]);
             return redirect()->to(base_url('dashboard'));
         }
 
@@ -91,6 +100,15 @@ class Auth extends Controller
 
     public function logout()
     {
+        $this->model->insertRow('activity_logs', [
+            'user_id'     => session()->get('user_id') ?? 'unknown',
+            'user_name'   => session()->get('des')     ?? 'Unknown',
+            'role'        => session()->get('role')    ?? 'unknown',
+            'action'      => 'logout',
+            'module'      => 'Auth',
+            'description' => 'User logged out: ' . (session()->get('username') ?? ''),
+            'created_at'  => date('Y-m-d H:i:s'),
+        ]);
         session()->destroy();
         return redirect()->to(base_url('login'))->with('message', 'Logged out successfully!');
     }

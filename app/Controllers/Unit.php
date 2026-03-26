@@ -22,6 +22,7 @@ class Unit extends BaseAppController
             }
             $data = ['des_unit' => $this->request->getPost('des_unit')];
             if ($this->model->insertRow('unit', $data)) {
+                $this->log('create', 'Unit', 'Added unit: ' . $data['des_unit']);
                 return redirect()->to(base_url('unit'))->with('message', 'Data saved.');
             }
             return redirect()->to(base_url('unit/add'))->with('error', 'Data failed to save.');
@@ -41,6 +42,7 @@ class Unit extends BaseAppController
             }
             $data = ['des_unit' => $this->request->getPost('des_unit')];
             if ($this->model->updateRow('unit', 'id_unit', $id, $data)) {
+                $this->log('update', 'Unit', 'Updated unit ID: ' . $id . ' — ' . $data['des_unit']);
                 return redirect()->to(base_url('unit'))->with('message', 'Data updated.');
             }
             return redirect()->to(base_url("unit/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -53,7 +55,9 @@ class Unit extends BaseAppController
 
     public function delete(int $id)
     {
+        $target = $this->model->getRow('unit', ['id_unit' => $id]);
         if ($this->model->deleteRow('unit', 'id_unit', $id)) {
+            $this->log('delete', 'Unit', 'Deleted unit: ' . ($target['des_unit'] ?? $id));
             return redirect()->to(base_url('unit'))->with('message', 'Data deleted.');
         }
         return redirect()->to(base_url('unit'))->with('error', 'Something went wrong.');

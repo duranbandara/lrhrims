@@ -277,6 +277,50 @@ class MainModel
             ->get()->getResultArray();
     }
 
+    public function getAllLotsForReagent(string $reagentId): array
+    {
+        return $this->db->table('reagent_lots rl')
+            ->select('rl.id_lot, rl.lot_number, rl.expiry_date, rl.quantity, b.des_item, b.item_code, s.des_unit, DATEDIFF(rl.expiry_date, CURDATE()) AS days_left')
+            ->join('items b', 'rl.reagent_id = b.id_item')
+            ->join('unit s',  'b.unit_id = s.id_unit', 'left')
+            ->where('rl.reagent_id', $reagentId)
+            ->orderBy('rl.expiry_date', 'ASC')
+            ->get()->getResultArray();
+    }
+
+    public function getActivityLogs(?array $range = null, ?int $limit = null): array
+    {
+        $builder = $this->db->table('activity_logs')
+            ->orderBy('created_at', 'DESC');
+        if ($range !== null) {
+            $builder->where('DATE(created_at) >=', $range['start']);
+            $builder->where('DATE(created_at) <=', $range['end']);
+        }
+        if ($limit !== null) {
+            $builder->limit($limit);
+        }
+        return $builder->get()->getResultArray();
+    }
+
+    public function deleteActivityLogsByRange(array $range): bool
+    {
+        return $this->db->table('activity_logs')
+            ->where('DATE(created_at) >=', $range['start'])
+            ->where('DATE(created_at) <=', $range['end'])
+            ->delete();
+    }
+
+    public function getLotDeletionLogs(?array $range = null): array
+    {
+        $builder = $this->db->table('lot_deletion_logs')
+            ->orderBy('deleted_at', 'DESC');
+        if ($range !== null) {
+            $builder->where('DATE(deleted_at) >=', $range['start']);
+            $builder->where('DATE(deleted_at) <=', $range['end']);
+        }
+        return $builder->get()->getResultArray();
+    }
+
     public function getUsers(int $excludeId): array
     {
         return $this->db->table('user')->where('id_user !=', $excludeId)->get()->getResultArray();

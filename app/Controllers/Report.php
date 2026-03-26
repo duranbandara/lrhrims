@@ -6,41 +6,146 @@ class Report extends BaseAppController
 {
     public function index()
     {
-        if (strtolower($this->request->getMethod()) === 'post') {
-            $transaction = $this->request->getPost('transaction');
-            $rules       = ['transaction' => 'required|in_list[item_in,item_out,current_stock]'];
-            if ($transaction !== 'current_stock') {
-                $rules['date'] = 'required';
-            }
+        $transaction = $this->request->getGet('transaction');
+        $date        = $this->request->getGet('date') ?? '';
 
-            if (! $this->validate($rules)) {
-                return $this->render('report/index', [
-                    'title'          => 'Transaction Report',
-                    'report_scripts' => true,
-                    'validation'     => $this->validator,
-                ]);
-            }
-
-            if ($transaction === 'current_stock') {
-                $query = $this->model->getCurrentStockByLot();
-                return $this->_printStock($query);
-            }
-
-            $date   = $this->request->getPost('date');
-            $parts  = explode(' - ', $date);
-            $start  = date('Y-m-d', strtotime($parts[0]));
-            $end    = date('Y-m-d', strtotime(end($parts)));
-
-            if ($transaction === 'item_in') {
-                $query = $this->model->getIncomingItems(null, null, ['start' => $start, 'end' => $end]);
-            } else {
-                $query = $this->model->getOutgoingItemsDashboard(null, ['start' => $start, 'end' => $end]);
-            }
-
-            return $this->_printTransactions($query, $transaction, $date);
+        if (! $transaction) {
+            return $this->render('report/index', ['title' => 'Transaction Report', 'report_scripts' => true]);
         }
 
-        return $this->render('report/index', ['title' => 'Transaction Report', 'report_scripts' => true]);
+        $allowed = ['item_in', 'item_out', 'current_stock', 'lot_deletion_logs', 'activity_logs'];
+        if (! in_array($transaction, $allowed)) {
+            return $this->render('report/index', [
+                'title'          => 'Transaction Report',
+                'report_scripts' => true,
+                'transaction'    => $transaction,
+                'date'           => $date,
+                'error'          => 'Invalid report type.',
+            ]);
+        }
+
+        if ($transaction !== 'current_stock' && trim($date) === '') {
+            return $this->render('report/index', [
+                'title'          => 'Transaction Report',
+                'report_scripts' => true,
+                'transaction'    => $transaction,
+                'date'           => $date,
+                'error'          => 'Please select a date range.',
+            ]);
+        }
+
+        if ($transaction === 'current_stock') {
+            return $this->_printStock($this->model->getCurrentStockByLot());
+        }
+
+        $parts = explode(' - ', $date);
+        $start = date('Y-m-d', strtotime($parts[0]));
+        $end   = date('Y-m-d', strtotime(end($parts)));
+        $range = ['start' => $start, 'end' => $end];
+
+        if ($transaction === 'activity_logs') {
+            return $this->_printActivityLogs($this->model->getActivityLogs($range), $date);
+        }
+
+        if ($transaction === 'lot_deletion_logs') {
+            return $this->_printLotDeletionLogs($this->model->getLotDeletionLogs($range), $date);
+        }
+
+        if ($transaction === 'item_in') {
+            $query = $this->model->getIncomingItems(null, null, $range);
+        } else {
+            $query = $this->model->getOutgoingItemsDashboard(null, $range);
+        }
+
+        return $this->_printTransactions($query, $transaction, $date);
+    }
+
+    private function _printActivityLogs(array $data, string $date): \CodeIgniter\HTTP\Response
+    {
+        require_once APPPATH . 'Libraries/fpdf/fpdf/fpdf.php';
+
+        $actionColors = [
+            'login'  => [198, 239, 206],
+            'logout' => [220, 220, 220],
+            'create' => [198, 224, 240],
+            'update' => [255, 235, 156],
+            'delete' => [255, 199, 206],
+        ];
+
+        $pdf = new \FPDF('L', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Times', 'B', 16);
+        $pdf->Cell(277, 7, 'Activity Log Report', 0, 1, 'C');
+        $pdf->SetFont('Times', '', 10);
+        $pdf->Cell(277, 4, 'Period: ' . $date, 0, 1, 'C');
+        $pdf->Ln(6);
+
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(230, 230, 230);
+        $pdf->Cell(8,   7, 'No.',         1, 0, 'C', true);
+        $pdf->Cell(35,  7, 'Date / Time', 1, 0, 'C', true);
+        $pdf->Cell(45,  7, 'User',        1, 0, 'C', true);
+        $pdf->Cell(20,  7, 'Role',        1, 0, 'C', true);
+        $pdf->Cell(20,  7, 'Action',      1, 0, 'C', true);
+        $pdf->Cell(35,  7, 'Module',      1, 0, 'C', true);
+        $pdf->Cell(114, 7, 'Description', 1, 1, 'C', true);
+
+        $no = 1;
+        foreach ($data as $d) {
+            $rgb = $actionColors[$d['action']] ?? [255, 255, 255];
+            $pdf->SetFillColor($rgb[0], $rgb[1], $rgb[2]);
+            $pdf->SetFont('Arial', '', 7);
+            $pdf->Cell(8,   6, $no++ . '.',                                      1, 0, 'C', true);
+            $pdf->Cell(35,  6, date('d-m-Y H:i', strtotime($d['created_at'])),  1, 0, 'C', true);
+            $pdf->Cell(45,  6, $d['user_name'],                                  1, 0, 'L', true);
+            $pdf->Cell(20,  6, $d['role'],                                       1, 0, 'C', true);
+            $pdf->Cell(20,  6, strtoupper($d['action']),                         1, 0, 'C', true);
+            $pdf->Cell(35,  6, $d['module'],                                     1, 0, 'L', true);
+            $pdf->Cell(114, 6, $d['description'],                                1, 1, 'L', true);
+        }
+
+        $pdf->Output('I', 'Activity_Log_' . date('Y-m-d') . '.pdf');
+        exit;
+    }
+
+    private function _printLotDeletionLogs(array $data, string $date): \CodeIgniter\HTTP\Response
+    {
+        require_once APPPATH . 'Libraries/fpdf/fpdf/fpdf.php';
+
+        $pdf = new \FPDF('L', 'mm', 'A4');
+        $pdf->AddPage();
+        $pdf->SetFont('Times', 'B', 16);
+        $pdf->Cell(277, 7, 'Lot Deletion Audit Log', 0, 1, 'C');
+        $pdf->SetFont('Times', '', 10);
+        $pdf->Cell(277, 4, 'Period: ' . $date, 0, 1, 'C');
+        $pdf->Ln(6);
+
+        $pdf->SetFont('Arial', 'B', 8);
+        $pdf->SetFillColor(230, 230, 230);
+        $pdf->Cell(8,  7, 'No.',         1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Deleted At',  1, 0, 'C', true);
+        $pdf->Cell(60, 7, 'Reagent',     1, 0, 'C', true);
+        $pdf->Cell(35, 7, 'Lot Number',  1, 0, 'C', true);
+        $pdf->Cell(22, 7, 'Expiry Date', 1, 0, 'C', true);
+        $pdf->Cell(18, 7, 'Qty',         1, 0, 'C', true);
+        $pdf->Cell(40, 7, 'Deleted By',  1, 0, 'C', true);
+        $pdf->Cell(59, 7, 'Reason',      1, 1, 'C', true);
+
+        $no = 1;
+        foreach ($data as $d) {
+            $pdf->SetFont('Arial', '', 7);
+            $pdf->Cell(8,  6, $no++ . '.', 1, 0, 'C');
+            $pdf->Cell(35, 6, date('d-m-Y H:i', strtotime($d['deleted_at'])), 1, 0, 'C');
+            $pdf->Cell(60, 6, $d['reagent_name'], 1, 0, 'L');
+            $pdf->Cell(35, 6, $d['lot_number'], 1, 0, 'C');
+            $pdf->Cell(22, 6, $d['expiry_date'] ? date('d-m-Y', strtotime($d['expiry_date'])) : '-', 1, 0, 'C');
+            $pdf->Cell(18, 6, (float)$d['quantity_deleted'], 1, 0, 'C');
+            $pdf->Cell(40, 6, $d['deleted_by_name'], 1, 0, 'L');
+            $pdf->Cell(59, 6, $d['reason'], 1, 1, 'L');
+        }
+
+        $pdf->Output('I', 'Lot_Deletion_Log_' . date('Y-m-d') . '.pdf');
+        exit;
     }
 
     private function _printTransactions(array $data, string $type, string $date): \CodeIgniter\HTTP\Response

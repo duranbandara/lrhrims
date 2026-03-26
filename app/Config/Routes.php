@@ -86,6 +86,13 @@ $routes->get('user/edit/(:num)',   'User::edit/$1',   ['filter' => 'auth']);
 $routes->post('user/edit/(:num)',  'User::edit/$1',   ['filter' => 'auth']);
 $routes->get('user/delete/(:num)','User::delete/$1', ['filter' => 'auth']);
 
+// Lot Management (admin)
+$routes->get('lotmanagement',                      'LotManagement::index',         ['filter' => 'auth']);
+$routes->get('lotmanagement/deletelot/(:num)',     'LotManagement::deleteLot/$1',  ['filter' => 'auth']);
+
+// Activity Log (admin)
+$routes->get('activitylog',              'ActivityLog::index',         ['filter' => 'auth']);
+$routes->post('activitylog/deleterange', 'ActivityLog::deleteByRange', ['filter' => 'auth']);
+
 // Report
-$routes->get('report',  'Report::index', ['filter' => 'auth']);
-$routes->post('report', 'Report::index', ['filter' => 'auth']);
+$routes->get('report', 'Report::index', ['filter' => 'auth']);

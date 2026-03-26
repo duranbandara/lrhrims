@@ -42,6 +42,7 @@ class User extends BaseAppController
             ];
 
             if ($this->model->insertRow('user', $data)) {
+                $this->log('create', 'User Management', 'Added user: ' . $data['des'] . ' (' . $data['username'] . ') role: ' . $data['role']);
                 return redirect()->to(base_url('user'))->with('message', 'User added successfully!');
             }
             return redirect()->to(base_url('user/add'))->with('error', 'Something went wrong.');
@@ -86,6 +87,7 @@ class User extends BaseAppController
             ];
 
             if ($this->model->updateRow('user', 'id_user', $id, $data)) {
+                $this->log('update', 'User Management', 'Updated user ID: ' . $id . ' (' . $data['username'] . ') active: ' . $data['is_active'] . ' role: ' . $data['role']);
                 return redirect()->to(base_url('user'))->with('message', 'User updated!');
             }
             return redirect()->to(base_url("user/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -99,7 +101,9 @@ class User extends BaseAppController
 
     public function delete(int $id)
     {
+        $target = $this->model->getRow('user', ['id_user' => $id]);
         if ($this->model->deleteRow('user', 'id_user', $id)) {
+            $this->log('delete', 'User Management', 'Deleted user: ' . ($target['des'] ?? '') . ' (' . ($target['username'] ?? $id) . ')');
             return redirect()->to(base_url('user'))->with('message', 'User deleted.');
         }
         return redirect()->to(base_url('user'))->with('error', 'Something went wrong.');

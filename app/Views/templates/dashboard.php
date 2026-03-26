@@ -73,6 +73,9 @@
                     <a class="collapse-item" href="<?= base_url('unit') ?>">Units</a>
                     <a class="collapse-item" href="<?= base_url('category') ?>">Categories</a>
                     <a class="collapse-item" href="<?= base_url('goods') ?>">Reagent List</a>
+                    <a class="collapse-item" href="<?= base_url('lotmanagement') ?>">
+                        <i class="fas fa-trash-alt fa-xs mr-1 text-danger"></i>Lot Management
+                    </a>
                 </div>
             </div>
         </li>
@@ -82,6 +85,11 @@
         <li class="nav-item">
             <a class="nav-link" href="<?= base_url('report') ?>">
                 <i class="fas fa-fw fa-print"></i><span>Reports</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="<?= base_url('activitylog') ?>">
+                <i class="fas fa-fw fa-history"></i><span>Activity Log</span>
             </a>
         </li>
 
@@ -269,22 +277,5 @@ $('#expiryTable').DataTable({ pageLength: 10, lengthChange: false, searching: fa
 </script>
 <?php endif; ?>
 
-<?php if (isset($report_scripts) && $report_scripts): ?>
-<script>
-$(function() {
-    $('#date').daterangepicker({
-        locale: { format: 'YYYY-MM-DD' },
-        opens: 'left',
-        autoUpdateInput: false
-    });
-    $('#date').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD') + ' - ' + picker.endDate.format('YYYY-MM-DD'));
-    });
-    $('#date').on('cancel.daterangepicker', function() {
-        $(this).val('');
-    });
-});
-</script>
-<?php endif; ?>
 </body>
 </html>

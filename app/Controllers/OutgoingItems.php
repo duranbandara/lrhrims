@@ -62,6 +62,7 @@ class OutgoingItems extends BaseAppController
             ];
             $this->model->insertRow('item_out_dtl', $detail);
 
+            $this->log('create', 'Outgoing Items', 'Issued reagent: ' . $amountOut . ' units, Lot: ' . $lotNumber . ', Item ID: ' . $itemId . ', Ref: ' . $idItemOut);
             return redirect()->to(base_url('outgoingitems'))->with('message', 'Reagent issued successfully!');
         }
 
@@ -95,6 +96,7 @@ class OutgoingItems extends BaseAppController
         }
 
         if ($this->model->deleteRow('item_out', 'id_item_out', $id)) {
+            $this->log('delete', 'Outgoing Items', 'Deleted issue record ID: ' . $id);
             return redirect()->to(base_url('outgoingitems'))->with('message', 'Issue record deleted and stock restored!');
         }
         return redirect()->to(base_url('outgoingitems'))->with('error', 'Something went wrong.');

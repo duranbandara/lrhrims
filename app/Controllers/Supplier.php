@@ -29,6 +29,7 @@ class Supplier extends BaseAppController
             }
             $data = $this->request->getPost(['des_supplier', 'no_telp', 'address']);
             if ($this->model->insertRow('supplier', $data)) {
+                $this->log('create', 'Supplier', 'Added supplier: ' . $data['des_supplier']);
                 return redirect()->to(base_url('supplier'))->with('message', 'Data saved.');
             }
             return redirect()->to(base_url('supplier/add'))->with('error', 'Something went wrong.');
@@ -48,6 +49,7 @@ class Supplier extends BaseAppController
             }
             $data = $this->request->getPost(['des_supplier', 'no_telp', 'address']);
             if ($this->model->updateRow('supplier', 'id_supplier', $id, $data)) {
+                $this->log('update', 'Supplier', 'Updated supplier ID: ' . $id . ' — ' . $data['des_supplier']);
                 return redirect()->to(base_url('supplier'))->with('message', 'Data updated.');
             }
             return redirect()->to(base_url("supplier/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -60,7 +62,9 @@ class Supplier extends BaseAppController
 
     public function delete(int $id)
     {
+        $target = $this->model->getRow('supplier', ['id_supplier' => $id]);
         if ($this->model->deleteRow('supplier', 'id_supplier', $id)) {
+            $this->log('delete', 'Supplier', 'Deleted supplier: ' . ($target['des_supplier'] ?? $id));
             return redirect()->to(base_url('supplier'))->with('message', 'Data deleted.');
         }
         return redirect()->to(base_url('supplier'))->with('error', 'Something went wrong.');

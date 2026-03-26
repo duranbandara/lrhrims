@@ -22,6 +22,7 @@ class Category extends BaseAppController
             }
             $data = ['des_type' => $this->request->getPost('des_type')];
             if ($this->model->insertRow('type', $data)) {
+                $this->log('create', 'Category', 'Added category: ' . $data['des_type']);
                 return redirect()->to(base_url('category'))->with('message', 'Data saved!');
             }
             return redirect()->to(base_url('category/add'))->with('error', 'Something went wrong.');
@@ -41,6 +42,7 @@ class Category extends BaseAppController
             }
             $data = ['des_type' => $this->request->getPost('des_type')];
             if ($this->model->updateRow('type', 'id_type', $id, $data)) {
+                $this->log('update', 'Category', 'Updated category ID: ' . $id . ' — ' . $data['des_type']);
                 return redirect()->to(base_url('category'))->with('message', 'Data saved!');
             }
             return redirect()->to(base_url("category/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -53,7 +55,9 @@ class Category extends BaseAppController
 
     public function delete(int $id)
     {
+        $target = $this->model->getRow('type', ['id_type' => $id]);
         if ($this->model->deleteRow('type', 'id_type', $id)) {
+            $this->log('delete', 'Category', 'Deleted category: ' . ($target['des_type'] ?? $id));
             return redirect()->to(base_url('category'))->with('message', 'Data deleted.');
         }
         return redirect()->to(base_url('category'))->with('error', 'Something went wrong.');

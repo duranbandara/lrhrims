@@ -21,4 +21,17 @@ class BaseAppController extends Controller
         $data['content'] = view($view, $data);
         return view($template, $data);
     }
+
+    protected function log(string $action, string $module, string $description): void
+    {
+        $this->model->insertRow('activity_logs', [
+            'user_id'     => session()->get('user_id') ?? 'system',
+            'user_name'   => session()->get('des')     ?? 'System',
+            'role'        => session()->get('role')    ?? 'unknown',
+            'action'      => $action,
+            'module'      => $module,
+            'description' => $description,
+            'created_at'  => date('Y-m-d H:i:s'),
+        ]);
+    }
 }

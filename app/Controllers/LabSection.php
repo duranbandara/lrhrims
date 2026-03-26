@@ -27,6 +27,7 @@ class LabSection extends BaseAppController
             }
             $data = ['section_name' => $this->request->getPost('section_name')];
             if ($this->model->insertRow('lab_sections', $data)) {
+                $this->log('create', 'Lab Section', 'Added lab section: ' . $data['section_name']);
                 return redirect()->to(base_url('labsection'))->with('message', 'Lab section added successfully!');
             }
             return redirect()->to(base_url('labsection/add'))->with('error', 'Something went wrong.');
@@ -46,6 +47,7 @@ class LabSection extends BaseAppController
             }
             $data = ['section_name' => $this->request->getPost('section_name')];
             if ($this->model->updateRow('lab_sections', 'id_section', $id, $data)) {
+                $this->log('update', 'Lab Section', 'Updated lab section ID: ' . $id . ' — ' . $data['section_name']);
                 return redirect()->to(base_url('labsection'))->with('message', 'Lab section updated!');
             }
             return redirect()->to(base_url("labsection/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -58,7 +60,9 @@ class LabSection extends BaseAppController
 
     public function delete(int $id)
     {
+        $target = $this->model->getRow('lab_sections', ['id_section' => $id]);
         if ($this->model->deleteRow('lab_sections', 'id_section', $id)) {
+            $this->log('delete', 'Lab Section', 'Deleted lab section: ' . ($target['section_name'] ?? $id));
             return redirect()->to(base_url('labsection'))->with('message', 'Lab section deleted!');
         }
         return redirect()->to(base_url('labsection'))->with('error', 'Something went wrong.');

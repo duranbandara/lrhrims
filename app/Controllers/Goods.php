@@ -39,6 +39,7 @@ class Goods extends BaseAppController
                 'price'     => 0,
             ];
             if ($this->model->insertRow('items', $data)) {
+                $this->log('create', 'Reagents', 'Added reagent: ' . $data['des_item'] . ' (' . $data['item_code'] . ')');
                 return redirect()->to(base_url('goods'))->with('message', 'Reagent saved successfully!');
             }
             return redirect()->to(base_url('goods/add'))->with('error', 'Something went wrong.');
@@ -64,6 +65,7 @@ class Goods extends BaseAppController
                 'min_stock' => $this->request->getPost('min_stock'),
             ];
             if ($this->model->updateRow('items', 'id_item', $id, $data)) {
+                $this->log('update', 'Reagents', 'Updated reagent ID: ' . $id . ' — ' . $data['des_item']);
                 return redirect()->to(base_url('goods'))->with('message', 'Data saved successfully!');
             }
             return redirect()->to(base_url("goods/edit/{$id}"))->with('error', 'Something went wrong.');
@@ -77,6 +79,7 @@ class Goods extends BaseAppController
     public function delete(string $id)
     {
         if ($this->model->deleteRow('items', 'id_item', $id)) {
+            $this->log('delete', 'Reagents', 'Deleted reagent ID: ' . $id);
             return redirect()->to(base_url('goods'))->with('message', 'Data deleted!');
         }
         return redirect()->to(base_url('goods'))->with('error', 'Something went wrong.');

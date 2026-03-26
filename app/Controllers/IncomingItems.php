@@ -42,6 +42,7 @@ class IncomingItems extends BaseAppController
             ];
 
             if ($this->model->insertRow('item_in', $data)) {
+                $this->log('create', 'Incoming Items', 'Received reagent: ' . $this->request->getPost('amount_in') . ' units, Lot: ' . $this->request->getPost('lot_number') . ', Item ID: ' . $this->request->getPost('item_id'));
                 return redirect()->to(base_url('incomingitems'))->with('message', 'Reagent received successfully!');
             }
             return redirect()->to(base_url('incomingitems/add'))->with('error', 'Oops, something went wrong!');
@@ -67,6 +68,7 @@ class IncomingItems extends BaseAppController
     public function delete(string $id)
     {
         if ($this->model->deleteRow('item_in', 'id_item_in', $id)) {
+            $this->log('delete', 'Incoming Items', 'Deleted incoming record ID: ' . $id);
             return redirect()->to(base_url('incomingitems'))->with('message', 'Record deleted.');
         }
         return redirect()->to(base_url('incomingitems'))->with('error', 'Something went wrong.');
