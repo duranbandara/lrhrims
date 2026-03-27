@@ -202,6 +202,10 @@ function isGS1(v) { return v.indexOf(GS)!==-1||(/^01\d{14}/.test(v)&&v.length>20
 
 document.getElementById('btn_open_camera').addEventListener('click', function() {
     if (scannerOpen) { stopCamera(); return; }
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        showScanResult('danger','<i class="fas fa-lock"></i> Camera requires a secure connection (HTTPS). Please access this page via HTTPS.');
+        return;
+    }
     document.getElementById('qr-reader').style.display='block';
     this.innerHTML='<i class="fas fa-times"></i>'; this.title='Close camera';
     html5QrCode=new Html5Qrcode("qr-reader");

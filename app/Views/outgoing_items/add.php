@@ -184,6 +184,10 @@ function processInput(v){
 
 document.getElementById('btn_open_camera').addEventListener('click',function(){
     if(scannerOpen){stopCamera();return;}
+    if(location.protocol!=='https:'&&location.hostname!=='localhost'&&location.hostname!=='127.0.0.1'){
+        showScanResult('danger','<i class="fas fa-lock"></i> Camera requires a secure connection (HTTPS). Please access this page via HTTPS.');
+        return;
+    }
     document.getElementById('qr-reader').style.display='block';
     this.innerHTML='<i class="fas fa-times"></i>';
     html5QrCode=new Html5Qrcode("qr-reader");
